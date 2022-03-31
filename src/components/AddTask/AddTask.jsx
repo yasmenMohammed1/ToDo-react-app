@@ -1,90 +1,99 @@
 import React from "react";
 import { useState } from "react";
-export const AddTask = () => {
+import "mathjs";
+import { number, splitUnit } from "mathjs";
+export const AddTask = (props) => {
+  let today = new Date();
+
   const [todoData, settodoData] = useState({
     taskTitle: "add the task title here",
     startingDate: new Date(),
     finishingDate: new Date(),
-    // taskTime: finishingDate - startingDate,
-
+    taskHoursLeft: 0,
+    taskMinutesLeft: 0,
     taskDescription: "notMyrealPassword",
+    status: false,
   });
-  let startingHours;
-  let finishingHours;
 
-  // const diffTime = Math.abs(todoData.startingDate - date1); //! give me the milllseconds
-  //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); //TODO GIVE ME THE DAYES
-  //   console.log(diffTime + " milliseconds");
-  //   console.log(diffDays + " days");
+  let tasks = [];
+  let totalTime = Math.abs(
+    new Date(todoData.finishingDate) - new Date(todoData.startingDate)
+  );
+
+  let hoursLeft = Math.floor(totalTime / 60 / 1000 / 60);
+  let minutesLeft = Math.floor(
+    (totalTime - hoursLeft * 60 * 60 * 1000) / 1000 / 60
+  );
   const changeHandler = (e) => {
     if (e.target.id == "startingDate") {
       settodoData({
         ...todoData,
-        startingDate: new Date(e.target.value),
+        startingDate: e.target.value,
       });
       console.log(todoData.startingDate);
+    }
+    if (e.target.id == "taskTitle") {
+      settodoData({ ...todoData, taskTitle: e.target.value });
+      console.log(e.target.value);
     }
     if (e.target.id == "finishingDate") {
       console.log(todoData.finishingDate);
 
       settodoData({
         ...todoData,
-        finishingDate: new Date(e.target.value),
+        finishingDate: e.target.value,
       });
     }
   };
   return (
     <div>
-      enter data title
-      {/* starting date */}
-      <div className="card rounded-3 bg-info m-5">
-        <div className="card-header">choose when the task ends</div>
-
-        <div className="card-body">
-          <input
-            id="startingDate"
-            type="date"
-            value={todoData.startingDate.toISOString().split("T")[0]}
-            onChange={changeHandler}
-          />
-          <input
-            type="time"
-            value={todoData.startingHours}
-            onChange={(e) => {
-              startingHours = e.target.value;
-              console.log(e.target.value, startingHours + "starting hourd");
-            }}
-          />
-        </div>
-      </div>
-      {/* finishing date */}
-      <div className="card rounded-3 bg-success m-5">
-        <div className="card-header">choose when the task ends</div>
-
-        <div className="card-body">
-          <input
-            id="finishingDate"
-            type="date"
-            value={todoData.finishingDate.toISOString().split("T")[0]}
-            onChange={changeHandler}
-          />
-          <input
-            type="time"
-            value={finishingHours}
-            onChange={(e) => {
-              finishingHours = e.target.value;
-              console.log(e.target.value, finishingHours + "finishing hourd");
-            }}
-          />
-        </div>
-      </div>
-      <input
-        value={todoData.taskTitle}
-        id="taskTitle"
-        onChange={(e) => {
-          console.log(e.target.value - startingHours);
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          todoData.taskHoursLeft = hoursLeft;
+          todoData.taskMinutesLeft = minutesLeft;
+          tasks.push(todoData);
+          props.sendArray(tasks);
+          console.log(tasks);
+          console.log(todoData.remainingDate);
         }}
-      />
+      >
+        <div> enter task title</div>
+        <input
+          value={todoData.taskTitle}
+          id="taskTitle"
+          onChange={changeHandler}
+        />
+        {/* starting date */}
+        <div className="card rounded-3 bg-info m-5">
+          <div className="card-header">choose when the task starts</div>
+
+          <div className="card-body">
+            <input
+              id="startingDate"
+              type="datetime-local"
+              value={todoData.startingDate}
+              onChange={changeHandler}
+            />
+          </div>
+        </div>
+        {/* finishing date */}
+        <div className="card rounded-3 bg-success m-5">
+          <div className="card-header">choose when the task ends</div>
+
+          <div className="card-body">
+            <input
+              id="finishingDate"
+              type="datetime-local"
+              value={todoData.finishingDate}
+              onChange={changeHandler}
+            />
+          </div>
+        </div>
+        <div>
+          <input type="submit" id="submit" />
+        </div>
+      </form>
     </div>
   );
 };
