@@ -10,21 +10,22 @@ function App() {
   let appTasks = [];
   let [gettingTasks, settingTasks] = useState([]);
   gettingTasks = (tasks) => {
-    return (appTasks = [...tasks]);
+    appTasks = tasks;
   };
+  settingTasks = () => {
+    console.log(appTasks);
 
-  settingTasks = function () {
-    return [...appTasks];
+    return appTasks;
   };
   return (
     <div className="App">
       <header className="Todo app">
-        {/* <Register></Register> */}
-        <AddTask sendArray={gettingTasks}></AddTask>
-        <Display displayedtasks={[...appTasks]}></Display>
+        <Register></Register>
+        {/* <AddTask sendArray={gettingTasks}></AddTask>
+        <Display sentArray={settingTasks}></Display>; */}
         <button
           onClick={() => {
-            console.log(appTasks);
+            settingTasks();
           }}
         ></button>
       </header>

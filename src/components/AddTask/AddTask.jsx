@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "mathjs";
-import { number, splitUnit } from "mathjs";
+import "./AddTask.css";
 export const AddTask = (props) => {
   let today = new Date();
 
@@ -14,6 +14,7 @@ export const AddTask = (props) => {
     taskDescription: "notMyrealPassword",
     status: false,
   });
+  const [todoDataErrs, setDataErrs] = useState({ dublicatedDescription: null });
 
   let tasks = [];
   let totalTime = Math.abs(
@@ -61,6 +62,7 @@ export const AddTask = (props) => {
         <div> enter task title</div>
         <input
           value={todoData.taskTitle}
+          p
           id="taskTitle"
           onChange={changeHandler}
         />
